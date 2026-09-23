@@ -1,0 +1,36 @@
+project: vlm-hallucination-unseen-generator
+
+dataset:
+  name: sheep
+  version: null
+  provenance_verified: false
+
+experiment:
+  seeds: [13, 42, 2603]
+  split_type: null
+  heldout_generator: null
+
+models:
+  baseline:
+    text_only: true
+    frozen_vision_text: false
+    multimodal_fusion: false
+  generator_adversarial:
+    enabled: false
+    alpha_type: 1.0
+    beta_generator: 0.0
+
+evaluation:
+  metrics:
+    - span_iou
+    - correlation
+    - label_conditioned_correlation
+    - hallucination_type
+  report_per_generator: true
+  report_random_logo_gap: true
+
+reproducibility:
+  save_config: true
+  save_git_commit: true
+  save_dataset_version: true
+  save_eligible_sample_hash: true
