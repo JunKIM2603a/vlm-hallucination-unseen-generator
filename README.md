@@ -134,7 +134,27 @@ tests/
 
 ## Current status
 
-**Stage 0 — research viability validation**
+**DROP / KILL as currently specified — 2026-09-23**
 
-- [ ] SHEEP generator provenance verified
-- [ ] September 2026 novelty-collision search completed
+The two pre-experiment gates were completed before launching the Minimum Decisive Experiment:
+
+- [x] September 2026 novelty-collision search completed
+- [x] SHEEP public provenance audit completed
+- [ ] Reliable public per-sample generator provenance available — **FAILED**
+
+### Why the experiment is blocked
+
+The SHEEP paper internally distinguishes five generating VLMs and reports generator-conditioned analyses, but the currently public SHROOM-Visions release/documented JSONL schema does not expose a per-sample generator field, and the official task page does not link separate provenance metadata.
+
+Per the preregistered decision rule, generator identity must **not** be reconstructed from response style or fingerprints and then treated as ground truth.
+
+See:
+
+- `data/provenance/README.md` — provenance audit and KILL decision
+- `docs/novelty_collision.md` — 2026-09-23 collision search
+
+### Novelty conclusion
+
+The exact matched **random split vs leave-one-generator-out detector training** experiment was not found to be fully occupied, but SHEEP already studies model-dependent benchmark effects and generator-conditioned detector behavior, while UHP and other 2026 work further increase collision pressure.
+
+The topic should only be reopened if a dataset with reliable public generator provenance is identified or the SHEEP authors release an official sample-to-generator mapping.
