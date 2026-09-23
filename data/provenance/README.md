@@ -1,55 +1,92 @@
 # Dataset Provenance Audit
 
-This directory stores the evidence needed to decide whether the project is viable.
+## Final status: FAIL / KILL
 
-## Hard question
+Checked: **2026-09-23**
 
-Can every machine-generated sample used in the experiment be mapped reliably to its generating VLM?
+The project required public, reliable per-sample generating-VLM provenance for SHEEP. That requirement is **not met by the currently public SHROOM-Visions/SHEEP release that could be verified**.
 
-If **no**, the planned leave-one-generator-out study should be stopped.
+## Evidence
 
-## Evidence checklist
+### 1. Authoritative public task page
 
-- [ ] authoritative dataset/repository identified
-- [ ] dataset version or commit pinned
-- [ ] generator metadata field located
-- [ ] generator names/IDs enumerated
-- [ ] machine-generated sample count verified
-- [ ] human-written sample count verified
-- [ ] missing generator IDs counted
-- [ ] duplicate/source relationships inspected
-- [ ] ambiguous samples documented
-- [ ] final eligible-sample mapping hash recorded
+The official SHROOM-Visions 2026 page identifies SHEEP/SHROOM-Visions as a 20,000-sample dataset and states that the model-written portion comes from **5 diverse LVLMs**. It provides links to the released data and images:
 
-## Recommended mapping columns
+- https://helsinki-nlp.github.io/shroom/2026
+- official repository page source:
+  https://github.com/Helsinki-NLP/shroom/blob/main/2026.md
 
-```text
-sample_id
-source_id
-image_id
-prompt_id
-generator_id
-generator_name
-is_human
-target_label
-hallucination_type
-metadata_file
-metadata_field
-provenance_source
-eligible
-exclusion_reason
+However, the official page does **not** publish or link a separate generator-provenance metadata file. Searching the official `2026.md` source found no `metadata` or `generator` field/documentation.
+
+### 2. Publicly documented JSONL schema
+
+A SHROOM-Visions participant repository documents the released labeled JSONL schema as:
+
+```json
+{
+  "id": "train-en-413",
+  "language": "en",
+  "prompt": "...",
+  "image_name": "...jpg",
+  "response": "...",
+  "labels": [
+    {
+      "start": 148,
+      "end": 154,
+      "prob": 0.33,
+      "label": "mischaracterization"
+    }
+  ]
+}
 ```
 
-## Evidence log
+Source:
 
-| Item | Finding | Source | Verified date |
-|---|---|---|---|
-| dataset release | TODO | | |
-| generator field | TODO | | |
-| generator list | TODO | | |
-| machine count | TODO | | |
-| human count | TODO | | |
+https://github.com/sckwokyboom/Vision-Hallucination-Detector/blob/main/data/README.md
 
-## Rule
+The documented public schema contains **no per-sample generating-model field** such as `generator_id`, `model_name`, `origin_model`, or equivalent.
 
-Do not guess the generator from writing style or model fingerprints and then use that guessed identity as ground-truth provenance.
+### 3. The SHEEP paper does know generator identity internally
+
+The SHEEP paper states that model-written samples were generated using five VLMs:
+
+- Gemma 3
+- InternVL3
+- MiniCPM-V 4.5
+- LLaVA-NeXT
+- Qwen3-VL
+
+Paper:
+
+https://arxiv.org/abs/2608.01021
+
+The paper also reports analyses broken down by generating LVLM, so the authors clearly possessed generator provenance during dataset construction.
+
+But this is **not sufficient for this project**: the research prerequisite was that generator provenance be available in the **actual public metadata** so that a reproducible leave-one-generator-out split can be built without guessing or reconstructing model identity.
+
+## Checklist
+
+- [x] authoritative dataset/repository identified
+- [x] public release located
+- [x] five generating VLMs verified from the paper
+- [x] public labeled JSONL schema inspected through a participant implementation
+- [x] official task-page source checked for metadata/generator documentation
+- [ ] per-sample generator metadata field located
+- [ ] reproducible sample → generator mapping recovered from public metadata
+
+## Decision
+
+**KILL the planned SHEEP leave-one-generator-out study in its current form.**
+
+Do not infer generator labels from response style, model fingerprints, output wording, or clustering and then treat those inferred labels as ground truth.
+
+## What would reopen this gate?
+
+Only strong provenance evidence, for example:
+
+1. an official metadata release containing sample → generator identity;
+2. an official authors' repository with that mapping;
+3. a first-party supplementary file released after this audit;
+4. direct author-provided provenance that can be redistributed/reproduced for the study.
+
+Until then, Issue #1 is considered failed and the planned MDE is blocked.
