@@ -1,0 +1,52 @@
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.venv/
+venv/
+env/
+.env
+.env.*
+
+# IDE / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+.ipynb_checkpoints/
+
+# Logs and trackers
+*.log
+logs/
+wandb/
+mlruns/
+lightning_logs/
+
+# Datasets
+data/raw/*
+!data/raw/.gitkeep
+data/processed/*
+!data/processed/.gitkeep
+data/provenance/*.csv
+data/provenance/*.json
+!data/provenance/README.md
+
+# Models / checkpoints
+checkpoints/
+models/
+*.ckpt
+*.pt
+*.pth
+*.safetensors
+
+# Large outputs
+results/*
+!results/.gitkeep
+experiments/**/outputs/
+experiments/**/checkpoints/
+
+# Caches
+.cache/
+huggingface/
